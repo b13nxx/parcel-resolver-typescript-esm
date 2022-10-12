@@ -1,20 +1,23 @@
 {
   "name": "parcel-resolver-typescript-esm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Parcel v2 plugin for TypeScript ESM imports.",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/b8kkyn/parcel-resolver-typescript-esm"
-  },
-  "source": "src/index.ts",
-  "main": "dist/index.js",
+  "repository": "github:b8kkyn/parcel-resolver-typescript-esm",
+  "source": "./src/index.ts",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.esm.js",
   "packageManager": "yarn@3.2.3",
   "scripts": {
-    "watch": "yarn clean && tsc --watch",
-    "build": "yarn lint && yarn clean && tsc",
+    "watch": "yarn clean && yarn concurrently -c \"bgBlue.bold,bgMagenta.bold\" --names \"build:\" \"yarn:watch:*\"",
+    "watch:cjs": "yarn build:cjs --watch",
+    "watch:esm": "yarn build:esm --watch",
+    "build": "yarn lint && yarn clean && concurrently --timings -c \"bgBlue.bold,bgMagenta.bold\" --names \"build:\" \"yarn:build:*\"",
+    "build:cjs": "esbuild ./src/index.ts --outfile=dist/index.cjs.js --format=cjs",
+    "build:esm": "esbuild ./src/index.ts --outfile=dist/index.esm.js --format=esm",
     "clean": "rimraf dist",
-    "lint": "ts-standard"
+    "lint": "ts-standard",
+    "prepack": "yarn build"
   },
   "engines": {
     "node": ">= 12.0.0",
@@ -30,6 +33,8 @@
     "@parcel/types": "^2.7.0",
     "@tsconfig/node12": "^1.0.11",
     "@types/node": "^18.8.3",
+    "concurrently": "^7.4.0",
+    "esbuild": "^0.15.10",
     "rimraf": "^3.0.2",
     "ts-standard": "^11.0.0",
     "typescript": "^4.4.4"
